@@ -73,7 +73,7 @@ numeric_features = all_features.dtypes[all_features.dtypes != 'object'].index
 all_features[numeric_features] = all_features[numeric_features].apply(
     lambda x: (x - x.mean()) / (x.std()))
 # 标准化后，每个特征的均值变为0，所以可以直接用0来替换缺失值
-all_features = all_features.fillna(0)
+all_features[numeric_features] = all_features[numeric_features].fillna(0)
 ```
 
 接下来将离散数值转成指示特征。举个例子，假设特征MSZoning里面有两个不同的离散值RL和RM，那么这一步转换将去掉MSZoning特征，并新加两个特征MSZoning\_RL和MSZoning\_RM，其值为0或1。如果一个样本原来在MSZoning里的值为RL，那么有MSZoning\_RL=1且MSZoning\_RM=0。
@@ -209,7 +209,7 @@ print('%d-fold validation: avg train rmse %f, avg valid rmse %f'
 下面定义预测函数。在预测之前，我们会使用完整的训练数据集来重新训练模型，并将预测结果存成提交所需要的格式。
 
 ```{.python .input  n=18}
-def train_and_pred(train_features, test_feature, train_labels, test_data,
+def train_and_pred(train_features, test_features, train_labels, test_data,
                    num_epochs, lr, weight_decay, batch_size):
     net = get_net()
     train_ls, _ = train(net, train_features, train_labels, None, None,

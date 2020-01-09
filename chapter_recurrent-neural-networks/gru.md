@@ -123,7 +123,7 @@ def gru(inputs, state, params):
     for X in inputs:
         Z = nd.sigmoid(nd.dot(X, W_xz) + nd.dot(H, W_hz) + b_z)
         R = nd.sigmoid(nd.dot(X, W_xr) + nd.dot(H, W_hr) + b_r)
-        H_tilda = nd.tanh(nd.dot(X, W_xh) + R * nd.dot(H, W_hh) + b_h)
+        H_tilda = nd.tanh(nd.dot(X, W_xh) + nd.dot(R * H, W_hh) + b_h)
         H = Z * H + (1 - Z) * H_tilda
         Y = nd.dot(H, W_hq) + b_q
         outputs.append(Y)
@@ -175,7 +175,6 @@ d2l.train_and_predict_rnn_gluon(model, num_hiddens, vocab_size, ctx,
 * 假设时间步$t' < t$。如果只希望用时间步$t'$的输入来预测时间步$t$的输出，每个时间步的重置门和更新门的理想的值是多少？
 * 调节超参数，观察并分析对运行时间、困惑度以及创作歌词的结果造成的影响。
 * 在相同条件下，比较门控循环单元和不带门控的循环神经网络的运行时间。
-
 
 
 
